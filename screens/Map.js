@@ -21,7 +21,7 @@ export default class MyMap extends Component {
     this.state = {
       latitude: 0,
       longitude: 0,
-      error: nullk
+      error: null
     }
   }
 

@@ -2,18 +2,15 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import Post from '../components/Post'
 import {
-  // Image,
-  // Platform,
   ScrollView,
   StyleSheet,
   Text,
-  // StatusBar,
   View,
   Button
 } from 'react-native';
-import { tsConstructorType } from '@babel/types';
 import { FirebaseWrapper } from '../firebase/firebase';//getting posts from database
-import MyMap from './Map';
+import { Provider, connect } from 'react-redux'
+import store from '../store/index'
 
 // import { MonoText } from '../components/StyledText';
 
@@ -39,23 +36,34 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    let isLoggedIn = false;
 
+  if (this.props.loggedIn === true) {
     return (
-<View style={Style.container}>
-    <ScrollView>
-    <Text style={Style.getStartedText}>Places to check out: </Text>
-    {
-      this.state.posts && this.state.posts.map(
-        post => <View key={post.id}>
+      <Provider store={store}>
+       <View style={Style.container}>
+       <ScrollView>
+       <Text style={Style.getStartedText}>Places to check out: </Text>
+       {
+         this.state.posts && this.state.posts.map(
+         post => <View key={post.id}>
         <Post postInfo={post} />
         <Button title="remove" onPress={()=> this.removePost(post.id)}/>
         </View>)
 
-    }
-    </ScrollView>
-</View>
+       }
+       </ScrollView>
+       </View>
+       </Provider>
     )
+  } else {
+    return (
+      <View style={Style.container}>
+      <Text style={Style.getStartedText}>Log in to see your list</Text>
+    </View>
+    )
+
+  }
+
  }
 }
 
@@ -185,3 +193,8 @@ const Style = StyleSheet.create({
   //   color: '#2e78b7',
   // },
 });
+
+const mapState= (state) => ({
+  loggedIn: state.loggedIn
+})
+module.exports = connect(mapState, null)(HomeScreen)

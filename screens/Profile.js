@@ -1,48 +1,50 @@
 import React from 'react';
 import {
-  Text,
-  View,
-  Image,
-  Button,
-  StyleSheet
-} from 'react-native'
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity
+  } from 'react-native'
 import Login from '../components/Login'
+import { userIn, userOut } from "../store/thunks"
+import { connect, Provider } from "react-redux"
+import store from '../store/index'
+import { signOutUser } from '../firebase/authentication'
+import * as firebase from "firebase"
 
 
-export default class Profile extends React.Component {
+
+class Profile extends React.Component {
   constructor() {
     super()
-    this.state = {
-      isLoggedIn: false,
-    }
+  }
+  signOut = () => {
+    signOutUser()
   }
 
-
   render() {
-    return(
-      <View style={styles.container}>
+    let user = firebase.auth().currentUser;
+    if (this.props.loggedIn === true) {
+      console.log("current user   ", user)
+        return(
+          <Provider store={store}>
+          <View style={styles.container}>
+            <Text style={styles.text}>Welcome to your page</Text>
+            <TouchableOpacity style={styles.buttonText}>
+            <Text style={styles.buttonText} onPress={()=>{
+              this.signOut()
+              this.props.userOut()
+              }}>Sing Out</Text>
+          </TouchableOpacity>
+          </View>
+          </Provider>
+        )
 
-      {
-       this.state.isLoggedIn
-       ?
-       <View>
-         <Text style={styles.text}>Welcome to your page</Text>
-         <TouchableOpacity style={styles.buttonContainer}>
-         <Text style={styles.buttonText} onPress={()=>{this.state.isLoggedIn = false}}>Log Out</Text>
-         </TouchableOpacity>
-       </View>
-       :
-       <View style={styles.formContainer}>
-       <Image source={require('../assets/images/gelatoLogo.png')} style={styles.image}/>
+    } else {
+      console.log('no used logged in >>')
+      return <Login />
+    }
 
-       <Login />
-       </View>
-      }
-
-
-      </View>
-
-    )
   }
 }
 
@@ -60,15 +62,37 @@ const styles = StyleSheet.create({
     width: 150,
     textAlign: "center"
   },
-  image: {
-    width: 162,
-    height: 135,
-    alignSelf: "center"
+  input: {
+    height: 40,
+    width: 260,
+    backgroundColor: "#5E9ACC",
+    marginBottom: 20,
+    color: "white",
+    paddingHorizontal: 10
   },
-  logoContainer: {
-    alignItems: "center",
-    flexGrow: 1,
-    justifyContent: "center"
+  buttonContainer: {
+    backgroundColor: "#1088EB",
+    paddingVertical: 15
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: "center",
+    paddingVertical: 5,
+    fontWeight: "700"
   }
-
 })
+
+
+const mapState= (state) => ({
+  loggedIn: state.loggedIn,
+  page: state.page
+})
+
+const mapDispatch = (dispatch) => ({
+   userIn: ()=> dispatch(userIn()),
+   userOut: ()=> dispatch(userOut()),
+})
+
+module.exports = connect(mapState, mapDispatch)(Profile)
+
+

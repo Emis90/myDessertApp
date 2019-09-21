@@ -2,15 +2,19 @@ import React from 'react';
 import {
   Text,
   View,
-  Image,
-  Button,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   StatusBar
 } from 'react-native'
-import {createUser, signInUser}  from '../firebase/authentication'
+import { createUser, signInUser, googleLogin }  from '../firebase/authentication'
+import { userIn, userOut } from "../store/thunks"
+import { Provider, connect } from "react-redux"
+import store from '../store/index'
+// import {GoogleSignin} from "react-native-google-signin"
+
+
 
 
 export default class Login extends React.Component {
@@ -22,24 +26,33 @@ export default class Login extends React.Component {
     }
   }
 
+// signInWithGoogle = () => {
+//   // googleLogin()
+//   // GoogleSignin
+//   .signIn()
+//   .then(data => {
+//     const credentials = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken)
+//     return firebase.auth().signInWithCredential(credentials)
+//   })
+//   .then(user => console.log(user))
+//   .catch(err => console.log('not logged in >>', err))
+// }
+
 signUp = () => {
   createUser(this.state.email, this.state.password)
 }
 signIn = () => {
-  signInUser (this.state.email, this.state.password)
+  signInUser(this.state.email, this.state.password)
 }
 
   render() {
-    console.log(this.state)
+
     return(
-
+      <Provider store={store}>
       <KeyboardAvoidingView>
-
-
       <View style={styles.container}>
       <Text style={styles.buttonText}>Sign up to discover places</Text>
       <StatusBar barStyle="light-content"/>
-
       <TextInput
         style={styles.input}
         placeholder="email"
@@ -64,23 +77,32 @@ signIn = () => {
       />
 
       <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText} onPress={()=>{this.signIn()}}>Sing In</Text>
+        <Text style={styles.buttonText} onPress={()=>{
+          this.signIn()
+          this.props.userIn()
+          }}>Sign In</Text>
       </TouchableOpacity>
       <Text style={styles.buttonText}>OR</Text>
       <TouchableOpacity style={styles.buttonContainer}>
-        <Text style={styles.buttonText} onPress={()=>{this.signUp()}}>Sign Up</Text>
+        <Text style={styles.buttonText} onPress={()=>{
+          this.signUp()
+          this.props.userIn()
+          }}>Sign Up</Text>
       </TouchableOpacity>
+
       </View>
-
       </KeyboardAvoidingView>
-
+      </Provider>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20
+    marginTop: 50,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     color: 'white',
@@ -109,3 +131,17 @@ const styles = StyleSheet.create({
   }
 
 })
+
+
+const mapState= (state) => ({
+  loggedIn: state.loggedIn,
+  page: state.page
+})
+
+const mapDispatch = (dispatch) => ({
+   userIn: ()=> dispatch(userIn()),
+   userOut: ()=> dispatch(userOut()),
+})
+
+
+module.exports = connect(mapState, mapDispatch)(Login)

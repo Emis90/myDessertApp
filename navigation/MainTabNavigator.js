@@ -4,7 +4,6 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import MyMap from '../screens/Map'
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-// import LinksScreen from '../screens/LinksScreen';
 import Profile from '../screens/Profile';
 
 const config = Platform.select({
@@ -73,7 +72,6 @@ const tabNavigator = createBottomTabNavigator({
   ProfileStack,
   MapStack,
   HomeStack,
-
 });
 
 tabNavigator.path = '';

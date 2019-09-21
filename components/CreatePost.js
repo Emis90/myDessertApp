@@ -11,7 +11,6 @@ export class CreatePost extends Component {
   }
 
 
-
   async createPost() {
     try {
       await FirebaseWrapper.GetInstance().CreateNewDocument('myInfo', {text: this.state.text})
