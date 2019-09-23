@@ -24,6 +24,7 @@ export default class HomeScreen extends React.Component {
   }
 
   async componentDidMount () {
+
     await FirebaseWrapper.GetInstance().SetupCollectionListener('post', (posts) =>
       this.setState({
          posts
@@ -47,7 +48,7 @@ export default class HomeScreen extends React.Component {
          this.state.posts && this.state.posts.map(
          post => <View key={post.id}>
         <Post postInfo={post} />
-        <Button title="remove" onPress={()=> this.removePost(post.id)}/>
+        <Button title="x" onPress={()=> this.removePost(post.id)}/>
         </View>)
 
        }
@@ -155,6 +156,7 @@ const Style = StyleSheet.create({
     color: 'white',
     lineHeight: 24,
     textAlign: 'center',
+    fontWeight: "bold"
   },
   // tabBarInfoContainer: {
   //   position: 'absolute',

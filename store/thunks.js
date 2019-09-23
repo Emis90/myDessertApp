@@ -1,8 +1,8 @@
 import {
   logInUser,
   logOutUser,
-  profilePage,
-  signInOrUpPage
+  // profilePage,
+  // signInOrUpPage
 } from "./actions"
 
 
@@ -23,24 +23,10 @@ export function userOut(){
     try {
       dispatch(logOutUser())
     } catch (error) {
-      console.log('NOT logged in from userIn think ', error)
+      console.log('NOT logged in from userIn thunk ', error)
     }
   }
 
 }
 
-export const goToProfile = () => async => dispatch => {
-  try {
-    dispatch(profilePage())
-  } catch (error) {
-    console.log('did NOT navigate to profile ', error)
-  }
-}
 
-export const gotToSignInOrSignUp = () => async => dispatch => {
-  try {
-    dispatch(signInOrUpPage())
-  } catch (error) {
-    console.log('did NOT navidate to signIn page')
-  }
-}

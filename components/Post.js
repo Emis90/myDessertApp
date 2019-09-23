@@ -3,17 +3,17 @@ import {
   Text,
   View,
   StyleSheet,
-  Image,
   Button
 } from 'react-native'
 
 import { FirebaseWrapper } from '../firebase/firebase';
 import { whileStatement } from '@babel/types';
-// import console = require('console');
+
 
 
 
 export default function Post(props) {
+
   return (
     <View style={postStyle.container}>
 
@@ -21,7 +21,6 @@ export default function Post(props) {
         </View>
         <View style={postStyle.postContainer}>
         <Text style={postStyle.postText}>{props.postInfo.text}</Text>
-        {/* <Button title="Remove" onPress={()=> this.removePost()}/> */}
         </View>
       </View>
   )

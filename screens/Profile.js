@@ -6,10 +6,9 @@ import {
     TouchableOpacity
   } from 'react-native'
 import Login from '../components/Login'
-import { userIn, userOut } from "../store/thunks"
+import { userOut } from "../store/thunks"//this
 import { connect, Provider } from "react-redux"
 import store from '../store/index'
-import { signOutUser } from '../firebase/authentication'
 import * as firebase from "firebase"
 
 
@@ -18,30 +17,35 @@ class Profile extends React.Component {
   constructor() {
     super()
   }
-  signOut = () => {
-    signOutUser()
-  }
+
+  async signOutUser(){
+    await firebase
+      .auth()
+      .signOut()
+      .then(() => console.log("signed out!"))
+      .catch(err => console.log("you did not sign out >>", err));
+      let user = firebase.auth().currentUser
+      if (!user) {
+        this.props.userOut()
+      }
+  };
 
   render() {
     let user = firebase.auth().currentUser;
-    if (this.props.loggedIn === true) {
-      console.log("current user   ", user)
+    if(user) {
         return(
           <Provider store={store}>
           <View style={styles.container}>
             <Text style={styles.text}>Welcome to your page</Text>
             <TouchableOpacity style={styles.buttonText}>
             <Text style={styles.buttonText} onPress={()=>{
-              this.signOut()
-              this.props.userOut()
+              this.signOutUser()// to log out log out then tell the store to change page
               }}>Sing Out</Text>
           </TouchableOpacity>
           </View>
           </Provider>
         )
-
     } else {
-      console.log('no used logged in >>')
       return <Login />
     }
 
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: "bold",
     width: 150,
-    textAlign: "center"
+    textAlign: "center",
   },
   input: {
     height: 40,
@@ -89,8 +93,7 @@ const mapState= (state) => ({
 })
 
 const mapDispatch = (dispatch) => ({
-   userIn: ()=> dispatch(userIn()),
-   userOut: ()=> dispatch(userOut()),
+   userOut: ()=> dispatch(userOut())
 })
 
 module.exports = connect(mapState, mapDispatch)(Profile)

@@ -8,12 +8,12 @@ import {
   KeyboardAvoidingView,
   StatusBar
 } from 'react-native'
-import { createUser, signInUser, googleLogin }  from '../firebase/authentication'
+// import { createUser, signInUser }  from '../firebase/authentication'
 import { userIn, userOut } from "../store/thunks"
 import { Provider, connect } from "react-redux"
 import store from '../store/index'
 // import {GoogleSignin} from "react-native-google-signin"
-
+import * as firebase from "firebase"
 
 
 
@@ -26,24 +26,32 @@ export default class Login extends React.Component {
     }
   }
 
-// signInWithGoogle = () => {
-//   // googleLogin()
-//   // GoogleSignin
-//   .signIn()
-//   .then(data => {
-//     const credentials = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken)
-//     return firebase.auth().signInWithCredential(credentials)
-//   })
-//   .then(user => console.log(user))
-//   .catch(err => console.log('not logged in >>', err))
-// }
+  createUser = (email, password) => {
+     firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .catch(err => console.log("not created", err));
+  };
 
-signUp = () => {
-  createUser(this.state.email, this.state.password)
-}
-signIn = () => {
-  signInUser(this.state.email, this.state.password)
-}
+  logIn = (email, password) => {
+    try {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(err => console.log("not signed in", err));
+      let user = firebase.auth().currentUser
+      if (user) {
+        console.log('user from login function',user)
+        this.props.userIn()
+        return this.setState({
+          email: "",
+          password: ""
+        });
+      }
+    } catch (err) {
+      console.log("something wrong component login", err);
+    }
+  }
 
   render() {
 
@@ -76,17 +84,16 @@ signIn = () => {
         value={this.state.password}
       />
 
-      <TouchableOpacity style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.input}>
         <Text style={styles.buttonText} onPress={()=>{
-          this.signIn()
-          this.props.userIn()
+          this.logIn(this.state.email, this.state.password)
           }}>Sign In</Text>
       </TouchableOpacity>
-      <Text style={styles.buttonText}>OR</Text>
-      <TouchableOpacity style={styles.buttonContainer}>
+
+      <TouchableOpacity style={styles.input}>
         <Text style={styles.buttonText} onPress={()=>{
-          this.signUp()
-          this.props.userIn()
+          this.createUser(this.state.email, this.state.password)
+          this.logIn(this.state.email, this.state.password)
           }}>Sign Up</Text>
       </TouchableOpacity>
 
@@ -112,22 +119,27 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   input: {
-    height: 40,
-    width: 260,
+    textAlign: "center",
+    width: 200,
+    height: 70,
     backgroundColor: "#5E9ACC",
     marginBottom: 20,
     color: "white",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    fontWeight: "700",
   },
   buttonContainer: {
+    width: 200,
+    height: 70,
     backgroundColor: "#1088EB",
-    paddingVertical: 15
+    paddingHorizontal: 10
   },
   buttonText: {
-    color: 'white',
     textAlign: "center",
+    color: 'white',
+    marginTop: 20,
     paddingVertical: 5,
-    fontWeight: "700"
+    fontWeight: "700",
   }
 
 })

@@ -17,14 +17,4 @@ export const logOutUser = () => {
   }
 }
 
-export const profilePage = () => {
-  return {
-    type: PROFILE
-  }
-}
 
-export const signInOrUpPage = () => {
-  return {
-    type: SIGN_IN_OR_UP
-  }
-}

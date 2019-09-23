@@ -12,3 +12,5 @@ web-report/
 firebase/config.js
 GOOGLE_CLIENTID_IOS_EXPO
 babel.config.js
+.env.local
+data/*

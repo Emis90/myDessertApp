@@ -22,10 +22,7 @@ export class Header extends Component {
         </Text>
 
         <TouchableOpacity onPress={() => this.setState({ isModalVisible: true })} style={styles.buttonContainer}>
-          {/* <Image
-            style={{height: 50, width: 50, borderRadius: 20, borderColor: 'pink'}}
-            source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpIsuJPJq1Zu_7AX_5rzhiFRs5iCIC4lgdr87Bkn3blMPfcWv0"}}
-          /> */}
+
         </TouchableOpacity>
 
         <CreatePost isModalVisible={this.state.isModalVisible} closeModal={() => this.closeModal()} />

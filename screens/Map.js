@@ -11,7 +11,8 @@ import {
   ScrollView,
   Button
 } from "react-native";
-import * as places from '../data/place.json'
+// import * as places from '../data/place.json'
+import places from '../data/places'
 import MapView, { Marker, Callout } from "react-native-maps";
 
 
@@ -51,6 +52,7 @@ export default class MyMap extends Component {
   render() {
     return (
       <View style={styles.container}>
+
       <MapView style={styles.mapContainer} initialRegion={{
         latitude: 40.730680,
         longitude: -73.9990,
@@ -58,20 +60,20 @@ export default class MyMap extends Component {
         longitudeDelta: 0.1521,
       }}>
 
-      {places.dessertPlaces.map((place) => {
+      {places.venues.map((place) => {
          return (
 
         <MapView.Marker
 
          key={place.name}
-         coordinate={{latitude: place.location.latitude, longitude: place.location.longitude}}>
+         coordinate={{latitude: place.location.lat, longitude: place.location.lng}}>
          <Image source={require('../assets/images/gelatoCone.png')} style={{width: 20, height: 60}} />
          <Callout style={{width: 200, height: 80}} onPress={()=> this.createPost(place)}>
-         <Text style={{color: "#5FB3F9",fontWeight: "bold", textAlign: "center"}}>{place.name}:
-         {"\n"}
-         {place.description}
-         {"\n"}
-         </Text>
+         <Text style={{color: "#5FB3F9",fontWeight: "bold", textAlign: "center"}}>{place.name}</Text>
+
+         <Text style={{color: "#5FB3F9", textAlign: "center"}}>{place.location.address}</Text>
+
+
          <Button title="ADD" onPress={()=> alert({message: 'added'})} style={{color: "#5FB3F9",fontWeight: "bold", textAlign: "center"}}/>
          </Callout>
 

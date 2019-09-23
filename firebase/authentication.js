@@ -1,32 +1,34 @@
 import * as firebase from 'firebase'
+import 'firebase/firestore'
 
-
-export const signInUser = (email, password) => {
-	firebase
-		.auth()
-		.signInWithEmailAndPassword(email, password)
-		.catch((error) => console.log('didnt sign in >>', error));
-};
-
-export const createUser = (email, password) => {
-	firebase
+export const createUser = async(email, password) => {
+	await firebase
 		.auth()
 		.createUserWithEmailAndPassword(email, password)
-		.catch((error) => console.log('didnt create >>', error));
+		.then(()=> console.log('user created!'))
+		.catch((error) => console.log('did NOT create >>', error));
 };
 
-export const signOutUser = () => {
-	firebase
+export const signInUser = async(email, password) => {
+	await firebase
+		.auth()
+		.signInWithEmailAndPassword(email, password)
+		.then(()=> console.log('user signed in!'))
+		.catch((error) => console.log('did NOT sign in >>', error));
+};
+
+export const signOutUser = async() => {
+	await firebase
 		.auth()
 		.signOut()
+		.then(()=> console.log('user signed out!'))
 		.catch((error) => {
-			console.log("didnt sign out >> ", error)
+			console.log("dit NOT sign out >> ", error)
 		});
 };
 
 // export const googleLogin = () => {
 // 	let provider = new firebase.auth.GoogleAuthProvider()
-
 // 	firebase.auth()
 // 					.signInWithPopup(provider)
 // 					.then(result => {
@@ -35,5 +37,17 @@ export const signOutUser = () => {
 // 					.catch(error => {
 // 						console.log('did NOT sign in with Google >>', error)
 // 					})
+// }
+
+// signInWithGoogle = () => {
+//   // googleLogin()
+//   // GoogleSignin
+//   .signIn()
+//   .then(data => {
+//     const credentials = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken)
+//     return firebase.auth().signInWithCredential(credentials)
+//   })
+//   .then(user => console.log(user))
+//   .catch(err => console.log('not logged in >>', err))
 // }
 
