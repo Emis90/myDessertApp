@@ -29,17 +29,17 @@ export default class HomeScreen extends React.Component {
     let user = firebase.auth().currentUser
     let userId = user.uid
     let response = await FirebaseWrapper.GetInstance().SetUpCollectionListener(userId)
-    console.log('response.post >>> ',response.post)
-    this.setState({
-      posts: response.post
-    })
+      this.setState({
+        posts: response.post
+      })
   }
 
-  async removePost(file) {
+  async removePost() {
     try {
-      console.log('deleting..', file)
-      await FirebaseWrapper.GetInstance().deleteFile(file)
-
+      let user = firebase.auth().currentUser
+      let userId = user.uid
+      await FirebaseWrapper.GetInstance().deleteFile(userId)
+      this.setState ({posts: []})
     } catch (error) {
       console.log('did not delete post > eroor: ', error)
     }
@@ -49,21 +49,26 @@ export default class HomeScreen extends React.Component {
 
 
   render() {
+
   if (this.props.loggedIn === true) {
     return (
       <Provider store={store}>
        <View style={Style.container}>
        <ScrollView>
-       <Text style={Style.getStartedText}>Places to check out: </Text>
+       <Text style={Style.getStartedText}>Places ive been to: </Text>
        {
          this.state.posts.map((post, i)=>
           (<View key={i}>
                       <Text style={Style.getStartedText}>{post.venue}</Text>
-                      <Button title="x" onPress={()=> this.removePost(post)}/>
+
                  </View>)
                  )
 
        }
+       <View>
+       {(this.state.posts.length !== 0) ? <Button title="delete collection" onPress={()=> this.removePost()}/>
+       : <Text style={{color: "white"}}>add to your collection from the map</Text>}
+       </View>
        </ScrollView>
        </View>
        </Provider>
@@ -166,44 +171,9 @@ const Style = StyleSheet.create({
     color: 'white',
     lineHeight: 24,
     textAlign: 'center',
-    fontWeight: "bold"
-  },
-  // tabBarInfoContainer: {
-  //   position: 'absolute',
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0,
-  //   ...Platform.select({
-  //     ios: {
-  //       shadowColor: 'black',
-  //       shadowOffset: { width: 0, height: -3 },
-  //       shadowOpacity: 0.1,
-  //       shadowRadius: 3,
-  //     }
-  //   }),
-  //   alignItems: 'center',
-  //   backgroundColor: '#fbfbfb',
-  //   paddingVertical: 20,
-  // },
-  // tabBarInfoText: {
-  //   fontSize: 17,
-  //   color: 'rgba(96,100,109, 1)',
-  //   textAlign: 'center',
-  // },
-  // navigationFilename: {
-  //   marginTop: 5,
-  // },
-  // helpContainer: {
-  //   marginTop: 15,
-  //   alignItems: 'center',
-  // },
-  // helpLink: {
-  //   paddingVertical: 15,
-  // },
-  // helpLinkText: {
-  //   fontSize: 14,
-  //   color: '#2e78b7',
-  // },
+    fontWeight: "bold",
+    paddingTop: 10
+  }
 });
 
 const mapState= (state) => ({

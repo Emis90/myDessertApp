@@ -45,7 +45,7 @@ export class FirebaseWrapper {
       if(!res.data()) {
         return await ref.set({post: [doc], added: timestamp, id: ref.id})
       } else {
-        return await ref.set({post: [...res.data().post, doc, ], added: timestamp, id: ref.id})
+        return await ref.set({post: [...res.data().post, doc], added: timestamp, id: ref.id})
       }
 
     } catch (error) {
@@ -87,12 +87,11 @@ export class FirebaseWrapper {
 
   async SetUpCollectionListener(userId) {
     try {
-      console.log('calling setup did work');
       const res = await this._firestore
         .collection('post')
         .doc(userId)
         .get();
-      console.log(res.data())
+      console.log('res.data by user id from collection listener > ', res.data())
       return res.data();
     } catch (err) {
       console.log('OH no something did not work', err);
@@ -100,11 +99,11 @@ export class FirebaseWrapper {
   }
 
 
-  async deleteFile(file) {
+  async deleteFile(id) {
   try {
-    await this._firestore.collection('post').doc(file).delete(file.id)
+    await this._firestore.collection('post').doc(id).delete()
   } catch (error) {
-    console.log('not deleted, try again')
+    console.log('not deleted, try again >>', error)
   }
   }
 }
