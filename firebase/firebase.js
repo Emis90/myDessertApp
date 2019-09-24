@@ -34,37 +34,75 @@ export class FirebaseWrapper {
     return this._firebaseWrapperInstance;
   }
 
-  async CreateNewDocument(collectionPath, doc) {
+  async CreateNewDocument(collectionPath, doc, userId) {//doc is an object
     try {
-      const ref = this._firestore.collection(collectionPath).doc()
+      const ref = this._firestore.collection(collectionPath).doc(userId)
       const timestamp = firebase.firestore.Timestamp.now().toDate()
-      console.log('Content created!')
-      return await ref.set({ ...doc, createdAt: timestamp, id: ref.id })
+      const res = await this._firestore
+      .collection('post')
+      .doc(userId)
+      .get();
+      if(!res.data()) {
+        return await ref.set({post: [doc], added: timestamp, id: ref.id})
+      } else {
+        return await ref.set({post: [...res.data().post, doc, ], added: timestamp, id: ref.id})
+      }
+
     } catch (error) {
-      console.log('something went wrong :/ ', error)
+      console.log('document not created :/ ', error)
     }
   }
 
-  async SetupCollectionListener(collectionPath, callback) {
+  // async SetupCollectionListener(collectionPath, callback, userId) {
+  //   try {
+  //     console.log('calling SetupCollectionListener')
+  //     await this._firestore.collection(collectionPath)
+  //     .doc(userId)
+  //     .orderBy('createdAt', 'desc')
+  //     .onSnapshot(querySnapshot => {
+  //       let container = []
+  //       querySnapshot.forEach(doc => {
+  //         container.push(doc.data())
+  //       })
+  //       console.log('return callback container')
+  //       return callback(container)
+  //     })
+  //   } catch (error) {
+  //     console.log('oh no! something went bad :( !', error)
+  //   }
+  // }
+  // async SetUpCollectionListener(collectionPath, doc, userId) {
+  //   try {
+  //     console.log('setting up collection listeners worked');
+  //     const res = await this._firestore
+  //       .collection('post')
+  //       .doc(userId)
+  //       .get();
+  //     console.log(res.data().post)
+  //     return res.data().post;
+  //   } catch (err) {
+  //     console.log('setting up collection listener did not work >', err);
+  //   }
+  // }
+
+  async SetUpCollectionListener(userId) {
     try {
-      console.log('calling SetupCollectionListener')
-      await this._firestore.collection(collectionPath).orderBy('createdAt', 'desc').onSnapshot(querySnapshot => {
-        let container = []
-        querySnapshot.forEach(doc => {
-          container.push(doc.data())
-        })
-        console.log('return callback container')
-        return callback(container)
-      })
-    } catch (error) {
-      console.log('oh no! something went bad :( !', error)
+      console.log('calling setup did work');
+      const res = await this._firestore
+        .collection('post')
+        .doc(userId)
+        .get();
+      console.log(res.data())
+      return res.data();
+    } catch (err) {
+      console.log('OH no something did not work', err);
     }
   }
 
 
   async deleteFile(file) {
   try {
-    await this._firestore.collection('post').doc(file).delete()
+    await this._firestore.collection('post').doc(file).delete(file.id)
   } catch (error) {
     console.log('not deleted, try again')
   }

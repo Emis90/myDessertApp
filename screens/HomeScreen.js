@@ -11,6 +11,8 @@ import {
 import { FirebaseWrapper } from '../firebase/firebase';//getting posts from database
 import { Provider, connect } from 'react-redux'
 import store from '../store/index'
+import * as firebase from "firebase"
+
 
 // import { MonoText } from '../components/StyledText';
 
@@ -24,20 +26,29 @@ export default class HomeScreen extends React.Component {
   }
 
   async componentDidMount () {
-
-    await FirebaseWrapper.GetInstance().SetupCollectionListener('post', (posts) =>
-      this.setState({
-         posts
-        })
-    )
+    let user = firebase.auth().currentUser
+    let userId = user.uid
+    let response = await FirebaseWrapper.GetInstance().SetUpCollectionListener(userId)
+    console.log('response.post >>> ',response.post)
+    this.setState({
+      posts: response.post
+    })
   }
 
-  async removePost(id) {
-    await FirebaseWrapper.GetInstance().deleteFile(id)
+  async removePost(file) {
+    try {
+      console.log('deleting..', file)
+      await FirebaseWrapper.GetInstance().deleteFile(file)
+
+    } catch (error) {
+      console.log('did not delete post > eroor: ', error)
+    }
+
   }
+
+
 
   render() {
-
   if (this.props.loggedIn === true) {
     return (
       <Provider store={store}>
@@ -45,11 +56,12 @@ export default class HomeScreen extends React.Component {
        <ScrollView>
        <Text style={Style.getStartedText}>Places to check out: </Text>
        {
-         this.state.posts && this.state.posts.map(
-         post => <View key={post.id}>
-        <Post postInfo={post} />
-        <Button title="x" onPress={()=> this.removePost(post.id)}/>
-        </View>)
+         this.state.posts.map((post, i)=>
+          (<View key={i}>
+                      <Text style={Style.getStartedText}>{post.venue}</Text>
+                      <Button title="x" onPress={()=> this.removePost(post)}/>
+                 </View>)
+                 )
 
        }
        </ScrollView>
@@ -62,9 +74,7 @@ export default class HomeScreen extends React.Component {
       <Text style={Style.getStartedText}>Log in to see your list</Text>
     </View>
     )
-
   }
-
  }
 }
 

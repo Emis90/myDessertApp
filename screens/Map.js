@@ -1,20 +1,16 @@
 import React, { Component } from "react";
 import { FirebaseWrapper } from '../firebase/firebase';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
-  Animated,
   Image,
-  Dimensions,
-  ScrollView,
   Button
 } from "react-native";
 // import * as places from '../data/place.json'
 import places from '../data/places'
 import MapView, { Marker, Callout } from "react-native-maps";
-
+import * as firebase from "firebase"
 
 export default class MyMap extends Component {
   constructor() {
@@ -26,9 +22,15 @@ export default class MyMap extends Component {
     }
   }
 
-  async createPost(place) {
+
+  async createPost(place, userId) {
     try {
-      await FirebaseWrapper.GetInstance().CreateNewDocument('post', {text: place.name + "\n" + place.description})
+      await FirebaseWrapper.GetInstance().CreateNewDocument(
+      'post',
+      {
+        venue: place.name, address: place.location.address, id: place.id
+      },
+       userId)
     } catch (error) {
       console.log('something went wrong posting >>', error)
     }
@@ -50,6 +52,7 @@ export default class MyMap extends Component {
 
 
   render() {
+    let user = firebase.auth().currentUser
     return (
       <View style={styles.container}>
 
@@ -68,7 +71,7 @@ export default class MyMap extends Component {
          key={place.name}
          coordinate={{latitude: place.location.lat, longitude: place.location.lng}}>
          <Image source={require('../assets/images/gelatoCone.png')} style={{width: 20, height: 60}} />
-         <Callout style={{width: 200, height: 80}} onPress={()=> this.createPost(place)}>
+         <Callout style={{width: 200, height: 80}} onPress={()=> this.createPost(place, user.uid)}>
          <Text style={{color: "#5FB3F9",fontWeight: "bold", textAlign: "center"}}>{place.name}</Text>
 
          <Text style={{color: "#5FB3F9", textAlign: "center"}}>{place.location.address}</Text>
