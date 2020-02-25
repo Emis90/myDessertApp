@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import Post from '../components/Post'
+
 import {
   ScrollView,
   StyleSheet,
@@ -13,8 +13,6 @@ import { Provider, connect } from 'react-redux'
 import store from '../store/index'
 import * as firebase from "firebase"
 
-
-// import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
   constructor() {

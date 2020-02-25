@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Text, View,  TouchableOpacity, Image } from 'react-native';
 import { CreatePost } from './CreatePost';
+import styles from '../styles/Format'
 export class Header extends Component {
   constructor(props) {
     super(props);
@@ -16,7 +17,7 @@ export class Header extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.containerHeader}>
         <Text style={styles.text}>
           {this.props.text}
         </Text>
@@ -32,28 +33,28 @@ export class Header extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 30,
-    borderBottomWidth: 1,
-    borderBottomColor: '#dadada'
-  },
-  text: {
-    textAlign: 'center',
-    fontSize: 20,
-    fontWeight: 'bold',
-    flex: 1
-  },
-  button: {
-    width: 30,
-    height: 30,
-    resizeMode: 'contain',
-  },
-  buttonContainer: {
-    paddingRight: 5
-  }
-})
+// const styles = StyleSheet.create({
+//   container: {
+//     height: 50,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     paddingLeft: 30,
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#dadada'
+//   },
+//   text: {
+//     textAlign: 'center',
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//     flex: 1
+//   },
+//   button: {
+//     width: 30,
+//     height: 30,
+//     resizeMode: 'contain',
+//   },
+//   buttonContainer: {
+//     paddingRight: 5
+//   }
+// })
 

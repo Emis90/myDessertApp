@@ -8,13 +8,11 @@ import {
   KeyboardAvoidingView,
   StatusBar
 } from 'react-native'
-// import { createUser, signInUser }  from '../firebase/authentication'
 import { userIn, userOut } from "../store/thunks"
 import { Provider, connect } from "react-redux"
 import store from '../store/index'
-// import {GoogleSignin} from "react-native-google-signin"
 import * as firebase from "firebase"
-
+import styles from '../styles/Format'
 
 
 export default class Login extends React.Component {
@@ -104,45 +102,7 @@ export default class Login extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    color: 'white',
-    marginTop: 10,
-    fontWeight: "bold",
-    width: 150,
-    textAlign: "center"
-  },
-  input: {
-    textAlign: "center",
-    width: 200,
-    height: 70,
-    backgroundColor: "#5E9ACC",
-    marginBottom: 20,
-    color: "white",
-    paddingHorizontal: 10,
-    fontWeight: "700",
-  },
-  buttonContainer: {
-    width: 200,
-    height: 70,
-    backgroundColor: "#1088EB",
-    paddingHorizontal: 10
-  },
-  buttonText: {
-    textAlign: "center",
-    color: 'white',
-    marginTop: 20,
-    paddingVertical: 5,
-    fontWeight: "700",
-  }
 
-})
 
 
 const mapState= (state) => ({

@@ -17,6 +17,7 @@ export default function App(props) {
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
+      
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
