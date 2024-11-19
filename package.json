@@ -23,7 +23,7 @@
     "expo-font": "~6.0.0",
     "expo-google-app-auth": "^6.0.0",
     "expo-web-browser": "6.0.0",
-    "firebase": "^6.3.5",
+    "firebase": "^10.9.0",
     "firebaseui": "^4.1.0",
     "pod": "^0.9.0",
     "prettier": "^1.18.2",
